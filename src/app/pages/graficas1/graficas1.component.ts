@@ -31,7 +31,7 @@ export class Graficas1Component implements OnInit {
       'data':  [85, 15],
       'type': 'doughnut',
       'leyenda': '¿Le importa que le den gases?'
-    },
+    }
   };
 
   constructor() { }
