@@ -15,7 +15,7 @@ export class BreadcrumbsComponent implements OnInit {
         private router: Router,
         private titlePage: Title,
         private meta: Meta
-    ){
+    ) {
         this.getDataRoute()
         .subscribe( data => {
             // console.log( data );
