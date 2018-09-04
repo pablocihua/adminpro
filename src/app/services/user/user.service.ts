@@ -5,6 +5,7 @@ import { URL_SERVICE } from '../../config/config';
 
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { UploadFileService } from '../upload-file/upload-file.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,9 @@ export class UserService {
 
     constructor(
         public http: HttpClient,
-        private _router: Router
+        private _router: Router,
+        public _uploadService: UploadFileService
     ){
-        console.log('Service user');
         this.loadStorage();
     }
 
@@ -73,14 +74,10 @@ export class UserService {
         }
 
         let url = URL_SERVICE + '/login';
-        console.log( user );
+
         return this.http.post( url, user )
         .pipe( map(( resp: any ) => {
-            console.log( resp );
             this.saveStorage( resp.id, resp.token, resp.user );
-            // localStorage.setItem('id', resp.id );
-            // localStorage.setItem('token', resp.token );
-            // localStorage.setItem('user', JSON.stringify( resp.user ));
 
             return true;
         }));
@@ -94,6 +91,32 @@ export class UserService {
             swal('Usuario creado', user.email, 'success');
             return resp.user;
         }));
+    }
+
+    updateUser( user: User ){
+        let url = URL_SERVICE + '/user/' + this.user._id;
+        url += '?token=' + this.token;
+
+        return this.http.put( url, user )
+        .pipe( map(( resp: any ) => {
+            let _user = resp.user;
+            swal('Usuario actualizado', user.name, 'success');
+            this.saveStorage( user._id, this.token, _user );
+
+            return true;
+        }));
+    }
+
+    changeImage( file: File, id: string ){
+        this._uploadService.uploadFile( file, 'user', id )
+        .then(( resp: any ) => {
+            this.user.img = resp.user.img;
+            swal('Imagen Actualizada', this.user.name, 'success');
+            this.saveStorage( id, this.token, this.user );
+        })
+        .catch( resp => {
+            console.log( resp );
+        });
     }
 
 }
