@@ -11,6 +11,7 @@ import {
   SharedService,
   UserService,
   HospitalService,
+  DoctorService,
   LoginGuardGuard
 } from './service.index';
 
@@ -25,6 +26,7 @@ import {
     SharedService,
     UserService,
     HospitalService,
+    DoctorService,
     LoginGuardGuard,
     UploadFileService,
     ModalUploadService

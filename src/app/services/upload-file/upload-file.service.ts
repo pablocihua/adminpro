@@ -19,7 +19,7 @@ export class UploadFileService {
             xhr.onreadystatechange = function(){
                 if( xhr.readyState === 4 ){
                     if( xhr.status === 200 ){
-                        console.log('Image uploaded!');
+                        // console.log('Image uploaded!');
                         resolve( JSON.parse( xhr.response ));
                     } else {
                         console.log('Failed upload!');

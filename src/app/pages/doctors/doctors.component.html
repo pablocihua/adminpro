@@ -3,25 +3,14 @@
         <div class="card">
             <div class="card-body">
 
-            <input #input (keyup)="searchHospital( input.value )" type="text"
-                   class="form-control" placeholder="Buscar hospital">
+            <input #input (keyup)="searchDoctor( input.value )" type="text"
+                   class="form-control" placeholder="Buscar doctor">
 
             </div>
         </div>
     </div>
 </div>
 
-<div class="row animated fadeIn" *ngIf="loading">
-    <div class="col-sm-12">
-        <div class="alert alert-warning text-center">
-            <strong>Cargando</strong>
-            <br/>
-            <i class="fa fa-refresh fa-spin fa-2x"></i>
-            <br/>
-            <span>Espere por favor</span>
-        </div>
-    </div>
-</div>
 
 <div class="row animated fadeIn" *ngIf="!loading">
     <div class="col-12">
@@ -29,40 +18,41 @@
             <div class="card-body">
 
             <div class="text-right">
-                <button (click)="createHospital()" class="bt waves-effect waves-light btn-rounded btn-primary">
+                <button [routerLink]="['/doctor', 'new']"
+                        class="bt waves-effect waves-light btn-rounded btn-primary">
                     <i class="fa fa-plus"></i>
-                    Crear Hospital
+                    Crear Doctor
                 </button>
             </div>
 
             <h3 class="card-title">
-                Hospitales registrados ( <small>{{ totalRecords }}</small>)
+                Doctores registrados ( <small>{{ totalRecords }}</small>)
             </h3>
 
             <table class="table table-hover">
                 <thead>
                     <th>Imagen</th>
                     <th>Nombre</th>
-                    <th>Creado</th>
+                    <th>Hospital</th>
                     <th></th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let _hospital of hospitals">
+                    <tr *ngFor="let _doctor of doctors">
                         <td class="w70">
-                            <img (click)="showModal( _hospital._id )" [src]="_hospital.img | image:'hospital'" 
-                                 class="img-50 pointer">
+                            <img [src]="_doctor.img | image:'doctor'" 
+                                 class="img-50 img-circle">
                         </td>
                         <td>
-                            <input [(ngModel)]="_hospital.name" name="name" type="text" class="form-control">
+                            {{ _doctor.name }}
                         </td>
                         <td>
-                            
+                            {{ _doctor.hospital_fk.name }}
                         </td>
                         <td>
-                            <button (click)="saveHospital( _hospital )" class="btn btn-primary">
-                                <i class="fa fa-save"></i>
+                            <button [routerLink]="['/doctor', _doctor._id ]" class="btn btn-primary">
+                                <i class="fa fa-edit"></i>
                             </button>
-                            <button (click)="deleteHospital( _hospital )" class="btn btn-danger">
+                            <button (click)="deleteDoctor( _doctor )" class="btn btn-danger">
                                 <i class="fa fa-trash-o"></i>
                             </button>
                         </td>

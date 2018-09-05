@@ -124,16 +124,16 @@ export class UserService {
     }
 
     loadUsers( from: number = 0 ){
-        let url = URL_SERVICE + '/user?from=' + from;
+        const url = URL_SERVICE + '/user?from=' + from;
 
         return this.http.get( url );
     }
 
     searchUser( word: string ){
-        let url = URL_SERVICE + '/api/search/collection/users/' + word;
+        const url = URL_SERVICE + '/api/search/collection/users/' + word;
 
         return this.http.get( url )
-        .pipe( map(( resp: any ) => resp.users );
+        .pipe( map(( resp: any ) => resp.users ));
     }
 
     deleteUser( id: string ){

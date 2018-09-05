@@ -1,52 +1,51 @@
 import { Injectable } from '@angular/core';
-import { Hospital } from '../../models/hospital.model';
 import { HttpClient } from '@angular/common/http';
-import { URL_SERVICE } from '../../config/config';
-
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+
+import { Hospital } from '../../models/hospital.model';
+import { URL_SERVICE } from '../../config/config';
+
 import { UploadFileService } from '../upload-file/upload-file.service';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HospitalService {
     hospital: Hospital;
-    token: string;
 
     constructor(
         public http: HttpClient,
         private _router: Router,
-        public _uploadService: UploadFileService
+        public _uploadService: UploadFileService,
+        private _userService: UserService
     ){
-        
+
     }
 
-    createHospital( hospital: Hospital ){
-        const url = URL_SERVICE + '/api/hospital';
+    createHospital( name: string ){
+        let url = URL_SERVICE + '/api/hospital-register';
+        url += '?token=' + this._userService.token;
 
-        return this.http.post( url, hospital )
+        return this.http.post( url, { name })
         .pipe( map(( resp: any ) => {
-            swal('Hospital creado', hospital.name, 'success');
+            swal('Hospital creado', name, 'success');
             return resp.hospital;
         }));
     }
 
     updateHospital( hospital: Hospital ){
-        let url = URL_SERVICE + '/api/hospital/' + hospital._id;
-        url += '?token=' + this.token;
+        let url = URL_SERVICE + '/api/hospital-update/' + hospital._id;
+        url += '?token=' + this._userService.token;
 
         return this.http.put( url, hospital )
-        .pipe( map(( resp: any ) => {
-            if( hospital._id === this.hospital._id ){
-                let userDB: Hospital = resp.hospital;
-                //this.saveStorage( userDB._id, this.token, userDB );
-            }
+            .pipe( map(( resp: any ) => {
 
-            swal('Hospital actualizado', hospital.name, 'success');
+                swal('Hospital actualizado', hospital.name, 'success');
 
-            return true;
-        }));
+                return true;
+            }));
     }
 
     changeImage( file: File, id: string ){
@@ -63,21 +62,28 @@ export class HospitalService {
     }
 
     loadHospitals( from: number = 0 ){
-        let url = URL_SERVICE + '/api/hospital?from=' + from;
+        const url = URL_SERVICE + '/api/hospital?from=' + from;
 
         return this.http.get( url );
     }
 
-    searchHospital( word: string ){
-        let url = URL_SERVICE + '/api/search/collection/users/' + word;
+    getHospital( id: string ){
+        const url = URL_SERVICE + '/api/hospital/' + id;
 
         return this.http.get( url )
-        .pipe( map(( resp: any ) => resp.users );
+        .pipe( map(( resp: any ) => resp ));
+    }
+
+    searchHospital( word: string ){
+        let url = URL_SERVICE + '/api/search/collection/hospitals/' + word;
+
+        return this.http.get( url )
+        .pipe( map(( resp: any ) => resp.hospitals ));
     }
 
     deleteHospital( id: string ){
-        let url = URL_SERVICE + '/hospital/' + id;
-        url += '?token=' + this.token;
+        let url = URL_SERVICE + '/api/hospital-delete/' + id;
+        url += '?token=' + this._userService.token;
 
         return this.http.delete( url )
         .pipe( map(( resp: any ) => {

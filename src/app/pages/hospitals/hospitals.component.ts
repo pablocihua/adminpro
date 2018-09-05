@@ -37,7 +37,6 @@ export class HospitalsComponent implements OnInit {
 
         this._hospitalService.loadHospitals( this.from )
         .subscribe(( resp: any ) => {
-            console.log( resp );
             this.totalRecords = resp.total;
             this.hospitals =  resp.hospitals;
             this.loading = false;
@@ -68,6 +67,7 @@ export class HospitalsComponent implements OnInit {
         } else {
             this.loadHospitals();
         }
+
         return;
     }
 
@@ -78,11 +78,11 @@ export class HospitalsComponent implements OnInit {
         }
 
         swal({
-                "title": 'Está seguro ?',
-                "text": 'Esta apunto de eliminar a ' + hospital.email,
-                "icon": 'warning',
-                "buttons": true,
-                "dangerMode": true
+                'title': 'Está seguro ?',
+                'text': 'Esta apunto de eliminar a ' + hospital.email,
+                'icon': 'warning',
+                'buttons': true,
+                'dangerMode': true
             }
         )
         .then(( del )=> {
@@ -98,6 +98,25 @@ export class HospitalsComponent implements OnInit {
     saveHospital( hospital: Hospital ){
         this._hospitalService.updateHospital( hospital )
         .subscribe();
+    }
+
+    createHospital( ){
+        swal({
+            'title': 'Crear Hospital',
+            'text': 'Ingrese el nombre del hospital',
+            'content': 'input',
+            'icon': 'info',
+            'buttons': true,
+            'dangerMode': true
+        })
+        .then(( value: string ) => {
+            if( !value || value.length === 0 ){
+                return;
+            }
+
+            this._hospitalService.createHospital( value )
+                .subscribe(() => this.loadHospitals() );
+        });
     }
 
 }
