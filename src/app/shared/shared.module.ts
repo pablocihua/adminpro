@@ -10,6 +10,7 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { FooterComponent } from './footer/footer.component';
 // Pipes Module
 import { PipesModule } from '../pipes/pipes.module';
+import { ModalUploadComponent } from '../components/modal-upload/modal-upload.component';
 
 @NgModule({
     declarations: [
@@ -17,14 +18,16 @@ import { PipesModule } from '../pipes/pipes.module';
         HeaderComponent,
         SidebarComponent,
         BreadcrumbsComponent,
-        FooterComponent
+        FooterComponent,
+        ModalUploadComponent
     ],
     exports: [
         NopagefoundComponent,
         HeaderComponent,
         SidebarComponent,
         BreadcrumbsComponent,
-        FooterComponent
+        FooterComponent,
+        ModalUploadComponent
     ],
     imports: [
         RouterModule,

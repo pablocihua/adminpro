@@ -11,8 +11,7 @@ declare function init_plugins();
 @Component({
     selector: 'app-nopagefound',
     templateUrl: './nopagefound.component.html',
-    styles: [̣̣`
-    .error-box {
+    styles: [`.error-box {
         height: 100%;
         position: fixed;
         background: url(../../../assets/images/background/error-bg.jpg) no-repeat center center #fff;

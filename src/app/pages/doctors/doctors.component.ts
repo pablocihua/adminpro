@@ -66,7 +66,7 @@ export class DoctorsComponent implements OnInit {
     deleteDoctor( doctor: Doctor ){
         swal({
             'title': 'Está seguro ?',
-            'text': 'Esta apunto de eliminar a ' + doctor.email,
+            'text': 'Esta apunto de eliminar a ' + doctor.name,
             'icon': 'warning',
             'buttons': true,
             'dangerMode': true

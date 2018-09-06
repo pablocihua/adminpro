@@ -6,7 +6,7 @@ import { PAGES_ROUTES } from './pages.routes';
 
 import { SharedModule } from '../shared/shared.module';
 
-import { PagesComponent } from './pages.component';
+// import { PagesComponent } from './pages.component';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProgressComponent } from './progress/progress.component';
@@ -23,7 +23,7 @@ import { RxjsComponent } from './rxjs/rxjs.component';
 import { PipesModule } from '../pipes/pipes.module';
 import { ProfileComponent } from './profile/profile.component';
 import { UsersComponent } from './users/users.component';
-import { ModalUploadComponent } from '../components/modal-upload/modal-upload.component';
+// import { ModalUploadComponent } from '../components/modal-upload/modal-upload.component';
 import { HospitalsComponent } from './hospitals/hospitals.component';
 import { DoctorsComponent } from './doctors/doctors.component';
 import { DoctorComponent } from './doctors/doctor.component';
@@ -31,7 +31,7 @@ import { SearchingComponent } from './searching/searching.component';
 
 @NgModule({
     declarations: [
-        PagesComponent,
+        // PagesComponent,
         DashboardComponent,
         ProgressComponent,
         Graficas1Component,
@@ -43,16 +43,16 @@ import { SearchingComponent } from './searching/searching.component';
         ProfileComponent,
         UsersComponent,
         HospitalsComponent,
-        ModalUploadComponent,
+        // ModalUploadComponent,
         DoctorsComponent,
         DoctorComponent,
         SearchingComponent
     ],
-    exports: {
+    exports: [
         DashboardComponent,
         ProgressComponent,
         Graficas1Component
-    },
+    ],
     imports: [
         CommonModule,
         SharedModule,

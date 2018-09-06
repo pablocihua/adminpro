@@ -79,7 +79,7 @@ export class HospitalsComponent implements OnInit {
 
         swal({
                 'title': 'Está seguro ?',
-                'text': 'Esta apunto de eliminar a ' + hospital.email,
+                'text': 'Esta apunto de eliminar a ' + hospital.name,
                 'icon': 'warning',
                 'buttons': true,
                 'dangerMode': true

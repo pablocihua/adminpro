@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import swal from 'sweetalert';
+
 import { map } from 'rxjs/operators';
 
 import { URL_SERVICE } from '../../config/config';

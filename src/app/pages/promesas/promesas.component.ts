@@ -26,7 +26,7 @@ export class PromesasComponent implements OnInit {
                 counter += 1;
                 console.log( counter );
                 if( counter === 3 ){
-                    resolve('Ok!');
+                    resolve( true );
                     // reject('Un simple error');
                     clearInterval( interval );
                 }

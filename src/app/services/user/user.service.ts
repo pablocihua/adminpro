@@ -3,8 +3,10 @@ import { User } from '../../models/user.model';
 import { HttpClient } from '@angular/common/http';
 import { URL_SERVICE } from '../../config/config';
 
+import swal from 'sweetalert';
+
 import { map, catchError } from 'rxjs/operators';
-import { throw } from 'rxjs/observable/throw';
+// import { throw } from 'rxjs/observable/throw';
 import { Router } from '@angular/router';
 import { UploadFileService } from '../upload-file/upload-file.service';
 import { Observable, of } from 'rxjs';
@@ -61,8 +63,8 @@ export class UserService {
         localStorage.removeItem('user');
         localStorage.removeItem('menu');
 
-        // this._router.navigate(['/login']);
-        window.location.href = '/#/login';
+        this._router.navigate(['/login']);
+        // window.location.href = '/#/login';
     }
 
     loginGoogle( token: string ){
@@ -175,6 +177,25 @@ export class UserService {
             swal('Usuario eliminado', 'El usuario ha sido eliminado correctamente', 'success');
             return true;
         }));
+    }
+
+    renewToken(){
+        let url = URL_SERVICE + '/login/renewtoken';
+            url += '?token=' + this.token;
+
+        return this.http.get( url )
+            .pipe(
+                map(( resp: any ) => {
+                    this.token = resp.token;
+
+                    this.saveStorage( this.user._id, this.token, this.user, this.menu );
+                }),
+                catchError( err => {
+                    this._router.navigate(['/login']);
+                    swal('No fue posible actualizar sessión', 'Intente acceder de nuevo por favor!', 'error');
+                    return Observable.throw( err );
+                })
+            );
     }
 
     private handleError<T> ( operation = 'operation', result?: T ){

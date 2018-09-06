@@ -20,4 +20,8 @@ export class SidebarComponent implements OnInit {
 		this._sidebar.loadMenu();
 	}
 
+	logout(){
+		this._userService.logout();
+	}
+
 }

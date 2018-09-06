@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
+import swal from 'sweetalert';
+
 import { Hospital } from '../../models/hospital.model';
 import { URL_SERVICE } from '../../config/config';
 
