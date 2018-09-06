@@ -3,9 +3,11 @@ import { User } from '../../models/user.model';
 import { HttpClient } from '@angular/common/http';
 import { URL_SERVICE } from '../../config/config';
 
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
+import { throw } from 'rxjs/observable/throw';
 import { Router } from '@angular/router';
 import { UploadFileService } from '../upload-file/upload-file.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +15,7 @@ import { UploadFileService } from '../upload-file/upload-file.service';
 export class UserService {
     user: User;
     token: string;
+    menu: any[] = [];
 
     constructor(
         public http: HttpClient,
@@ -30,27 +33,33 @@ export class UserService {
         if( localStorage.getItem('token')){
             this.token = localStorage.getItem('token');
             this.user = JSON.parse( localStorage.getItem('user'));
+            this.menu = JSON.parse( localStorage.getItem('menu'));
         } else {
             this.token = '';
             this.user = null;
+            this.menu = [];
         }
     }
 
-    saveStorage( id: string, token: string, user: User ){
+    saveStorage( id: string, token: string, user: User, menu: any ){
         localStorage.setItem('id', id );
         localStorage.setItem('token', token );
         localStorage.setItem('user', JSON.stringify( user ));
+        localStorage.setItem('menu', JSON.stringify( menu ));
 
         this.user = user;
         this.token = token;
+        this.menu = menu;
     }
 
     logout(){
         this.token = '';
         this.user = null;
+        this.menu = [];
 
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('menu');
 
         // this._router.navigate(['/login']);
         window.location.href = '/#/login';
@@ -61,8 +70,8 @@ export class UserService {
 
         return this.http.post( url, { token })
         .pipe( map(( resp: any ) => {
-            this.saveStorage( resp.id, resp.token, resp.user );
-console.log( resp );
+            this.saveStorage( resp.id, resp.token, resp.user, resp.menu );
+
             return true;
         }));
     }
@@ -77,21 +86,33 @@ console.log( resp );
         let url = URL_SERVICE + '/login';
 
         return this.http.post( url, user )
-        .pipe( map(( resp: any ) => {
-            this.saveStorage( resp.id, resp.token, resp.user );
+        .pipe(
+            map(( resp: any ) => {
+                this.saveStorage( resp.id, resp.token, resp.user, resp.menu );
 
-            return true;
-        }));
+                return true;
+            }),
+            catchError( err => {
+                swal('Error en el login', err.error.message, 'error');
+                throw( err );
+            })
+        );
     }
 
     createUser( user: User ){
         const url = URL_SERVICE + '/user';
 
         return this.http.post( url, user )
-        .pipe( map(( resp: any ) => {
-            swal('Usuario creado', user.email, 'success');
-            return resp.user;
-        }));
+        .pipe(
+            map(( resp: any ) => {
+                swal('Usuario creado', user.email, 'success');
+                return resp.user;
+            }),
+            catchError( err => {
+                swal( err.error.message, err.error.errors.message, 'error');
+                throw( err );
+            })
+        );
     }
 
     updateUser( user: User ){
@@ -99,16 +120,22 @@ console.log( resp );
         url += '?token=' + this.token;
 
         return this.http.put( url, user )
-        .pipe( map(( resp: any ) => {
-            if( user._id === this.user._id ){
-                let userDB: User = resp.user;
-                this.saveStorage( userDB._id, this.token, userDB );
-            }
+        .pipe(
+            map(( resp: any ) => {
+                if( user._id === this.user._id ){
+                    let userDB: User = resp.user;
+                    this.saveStorage( userDB._id, this.token, userDB, this.menu );
+                }
 
-            swal('Usuario actualizado', user.name, 'success');
+                swal('Usuario actualizado', user.name, 'success');
 
-            return true;
-        }));
+                return true;
+            }),
+            catchError( err => {
+                swal( err.error.message, err.error.errors.message, 'error');
+                throw( err );
+            })
+        );
     }
 
     changeImage( file: File, id: string ){
@@ -116,7 +143,7 @@ console.log( resp );
         .then(( resp: any ) => {
             this.user.img = resp.user.img;
             swal('Imagen Actualizada', this.user.name, 'success');
-            this.saveStorage( id, this.token, this.user );
+            this.saveStorage( id, this.token, this.user, this.menu );
         })
         .catch( resp => {
             console.log( resp );
