@@ -7,6 +7,8 @@ import { UserService } from '../services/service.index';
 import { User } from '../models/user.model';
 import { Router } from '@angular/router';
 
+// declare var swal: any;
+
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',

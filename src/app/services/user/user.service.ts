@@ -7,7 +7,7 @@ import { map, catchError } from 'rxjs/operators';
 import { throw } from 'rxjs/observable/throw';
 import { Router } from '@angular/router';
 import { UploadFileService } from '../upload-file/upload-file.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -92,10 +92,11 @@ export class UserService {
 
                 return true;
             }),
-            catchError( err => {
+            catchError( this.handleError('Error en el login', [] ))
+            /* catchError( err => {
                 swal('Error en el login', err.error.message, 'error');
                 throw( err );
-            })
+            }) */
         );
     }
 
@@ -108,10 +109,11 @@ export class UserService {
                 swal('Usuario creado', user.email, 'success');
                 return resp.user;
             }),
-            catchError( err => {
+            catchError( this.handleError('Creando Usuario', [] ))
+            /* catchError( err => {
                 swal( err.error.message, err.error.errors.message, 'error');
                 throw( err );
-            })
+            }) */
         );
     }
 
@@ -131,10 +133,11 @@ export class UserService {
 
                 return true;
             }),
-            catchError( err => {
+            catchError( this.handleError('Actualizando Usuario', [] ))
+            /* catchError( err => {
                 swal( err.error.message, err.error.errors.message, 'error');
                 throw( err );
-            })
+            }) */
         );
     }
 
@@ -174,4 +177,22 @@ export class UserService {
         }));
     }
 
+    private handleError<T> ( operation = 'operation', result?: T ){
+        return ( error: any ): Observable< T > => {
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+            // TODO: better job of transforming error for user consumption
+            console.log(`${operation} failed: ${error.message}`);
+            let msg = '';
+            if( error.error.errors ){
+                msg = error.error.errors.message;
+                operation = error.error.message;
+            } else {
+                msg = error.error.message;
+            }
+            swal( operation, msg, 'error');
+            // Let the app keep running by returning an empty result.
+            return of( result as T );
+        };
+    }
 }
