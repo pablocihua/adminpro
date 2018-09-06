@@ -62,7 +62,7 @@ export class UserService {
         return this.http.post( url, { token })
         .pipe( map(( resp: any ) => {
             this.saveStorage( resp.id, resp.token, resp.user );
-
+console.log( resp );
             return true;
         }));
     }
